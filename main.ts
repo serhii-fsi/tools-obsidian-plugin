@@ -7,6 +7,7 @@ import {
 	Plugin,
 	PluginSettingTab,
 	Setting,
+	Menu,
 } from "obsidian";
 
 // Remember to rename these classes and interfaces!
@@ -30,8 +31,30 @@ export default class MyPlugin extends Plugin {
 			"share-2",
 			"Share Note",
 			(evt: MouseEvent) => {
-				// Called when the user clicks the icon.
-				new Notice("This is a notice!");
+				const menu = new Menu();
+				menu.addItem((item) =>
+					item.setTitle("Copy search by Id Link").onClick(() => {
+						new Notice("Copy search by ID Link");
+					})
+				);
+				menu.addItem((item) =>
+					item.setTitle("Copy search by Id URL").onClick(() => {
+						const activeFile = this.app.workspace.getActiveFile();
+						if (activeFile) {
+							const vaultName = this.app.vault.getName();
+							const noteName = activeFile.basename;
+							navigator.clipboard.writeText(
+								`${vaultName}:${noteName}`
+							);
+							new Notice(
+								`Vault : ${vaultName}, Note: ${noteName}`
+							);
+						} else {
+							new Notice("No active file found.");
+						}
+					})
+				);
+				menu.showAtMouseEvent(evt);
 			}
 		);
 		// Perform additional things with the ribbon
