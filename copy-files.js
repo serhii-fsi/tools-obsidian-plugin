@@ -7,7 +7,7 @@ if (!obsidianPluginPath) {
 	process.exit(1);
 }
 
-const command = `cp main.js manifest.json styles.css ${obsidianPluginPath}`;
+const command = `cp -r ./dist/* ${obsidianPluginPath}`;
 
 exec(command, (error, stdout, stderr) => {
 	if (error) {

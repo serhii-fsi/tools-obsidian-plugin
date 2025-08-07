@@ -12,16 +12,16 @@ import {
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface ToolsPluginSettings {
 	webUrlSetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: ToolsPluginSettings = {
 	webUrlSetting: "",
 };
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class ToolsPlugin extends Plugin {
+	settings: ToolsPluginSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -213,9 +213,9 @@ class SampleModal extends Modal {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: ToolsPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: ToolsPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
