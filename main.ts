@@ -33,9 +33,43 @@ export default class MyPlugin extends Plugin {
 			(evt: MouseEvent) => {
 				const menu = new Menu();
 				menu.addItem((item) =>
-					item.setTitle("Copy search by Id Link").onClick(() => {
-						new Notice("Copy search by ID Link");
-					})
+					item
+						.setTitle("Copy search by Id Link")
+						.onClick(async () => {
+							const activeFile =
+								this.app.workspace.getActiveFile();
+							if (activeFile) {
+								try {
+									const fileContent =
+										await this.app.vault.read(activeFile);
+									const noteIdRegex = /noteid: (.*)/;
+									const noteIdMatch =
+										fileContent.match(noteIdRegex);
+
+									if (noteIdMatch) {
+										new Notice("Note ID already exists.");
+									} else {
+										const newNoteId =
+											"ID" + new Date().getTime();
+										const newContent = `---\nnoteid: ${newNoteId}\n---\n${fileContent}`;
+
+										await this.app.vault.modify(
+											activeFile,
+											newContent
+										);
+										new Notice(
+											`Note ID added: ${newNoteId}`
+										);
+									}
+								} catch (e) {
+									new Notice(
+										`Error reading or modifying file: ${e}`
+									);
+								}
+							} else {
+								new Notice("No active file found.");
+							}
+						})
 				);
 				menu.addItem((item) =>
 					item.setTitle("Copy search by Id URL").onClick(() => {
@@ -47,7 +81,7 @@ export default class MyPlugin extends Plugin {
 								`${vaultName}:${noteName}`
 							);
 							new Notice(
-								`Vault : ${vaultName}, Note: ${noteName}`
+								`Vault: ${vaultName}, Note: ${noteName}`
 							);
 						} else {
 							new Notice("No active file found.");
