@@ -27,8 +27,8 @@ export default class MyPlugin extends Plugin {
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
-			"dice",
-			"Sample Plugin",
+			"share-2",
+			"Share Note",
 			(evt: MouseEvent) => {
 				// Called when the user clicks the icon.
 				new Notice("This is a notice!");
@@ -49,15 +49,7 @@ export default class MyPlugin extends Plugin {
 				new SampleModal(this.app).open();
 			},
 		});
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: "sample-editor-command",
-			name: "Sample editor command",
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
-				editor.replaceSelection("Sample Editor Command");
-			},
-		});
+
 		// This adds a complex command that can check whether the current state of the app allows execution of the command
 		this.addCommand({
 			id: "open-sample-modal-complex",
@@ -82,19 +74,23 @@ export default class MyPlugin extends Plugin {
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
-			console.log("click", evt);
-		});
+		// // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
+		// // Using this function will automatically remove the event listener when this plugin is disabled.
+		// this.registerDomEvent(document, "click", (evt: MouseEvent) => {
+		// 	console.log("click", evt);
+		// });
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
+		// // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+		// this.registerInterval(
+		// 	window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
+		// );
+
+		this.initInsertTimestamp();
 	}
 
 	onunload() {}
+
+	// Settings functionality
 
 	async loadSettings() {
 		this.settings = Object.assign(
@@ -106,6 +102,40 @@ export default class MyPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	// Insert Timestamp functionality
+
+	initInsertTimestamp() {
+		// This adds an editor command that can perform some operation on the current editor instance
+		this.addCommand({
+			id: "insert-timestamp",
+			name: "Insert Timestamp",
+			hotkeys: [
+				{
+					modifiers: ["Alt"], // Alt+T
+					key: "T",
+				},
+			],
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				this.insertTimestamp(editor, view);
+			},
+		});
+	}
+
+	insertTimestamp(editor: Editor, view: MarkdownView) {
+		const timestamp = this.generateTimestamp();
+		editor.replaceSelection(timestamp);
+	}
+
+	generateTimestamp() {
+		const now = new Date();
+		const day = String(now.getDate()).padStart(2, "0");
+		const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+		const year = now.getFullYear();
+		const hours = String(now.getHours()).padStart(2, "0");
+		const minutes = String(now.getMinutes()).padStart(2, "0");
+		return `${day}/${month}/${year}-${hours}:${minutes}`;
 	}
 }
 
