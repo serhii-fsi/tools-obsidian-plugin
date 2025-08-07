@@ -9,7 +9,7 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"copy-plugin": "node -r dotenv/config copy-files.js",
-		"dev-with-copy": "nodemon --watch 'main.ts,manifest.json,styles.css' --exec 'npm run build && npm run copy-plugin'",
+		"dev-with-copy": "nodemon --watch 'main.ts' --watch 'manifest.json' --watch 'styles.css' --exec 'npm run build && npm run copy-plugin'",
 		"build-with-copy": "npm run build && npm run copy-plugin"
 	},
 	"keywords": [],
