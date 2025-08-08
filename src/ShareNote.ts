@@ -1,7 +1,5 @@
-import { Editor, MarkdownView, Menu, Notice, TFile } from "obsidian";
+import { Menu, Notice } from "obsidian";
 import ToolsPlugin from "./main";
-import { NoteProperties } from "./NoteProperties";
-import { genUID } from "./utils/genUID";
 import { NoteId } from "./NoteId";
 import { genWebUrl } from "./utils/genWebUrl";
 import { genWebLink } from "./utils/genWebLink";
@@ -63,38 +61,21 @@ export class ShareNote {
 				const vaultName = this.plugin.app.vault.getName();
 				const noteName = activeFile.basename;
 
-				// let clipboard;
-				// if (shareType === ShareType.URL) {
-				// 	clipboard = genWebUrl();
-				// }
+				if (shareType === ShareType.URL) {
+					const clipboard = genWebUrl(baseUrl, vaultName, noteId);
 
-				// await navigator.clipboard.writeText(noteId);
+					await navigator.clipboard.writeText(clipboard);
+				} else if (shareType === ShareType.LINK) {
+					const text = `🗈 ${vaultName}: ${noteName}`;
+					const html = genWebLink(baseUrl, vaultName, noteId, text);
 
-				//  new Notice("!!!!!!  " + noteProps.readProp("noteId"));
+					const clipboardItem = new ClipboardItem({
+						"text/plain": new Blob([text], { type: "text/plain" }),
+						"text/html": new Blob([html], { type: "text/html" }),
+					});
 
-				// const fileContent = await this.app.vault.read(activeFile);
-				// const noteIdRegex = /noteId: ID\d+/;
-				// const noteIdMatch = fileContent.match(noteIdRegex);
-
-				// if (noteIdMatch) {
-				// 	new Notice("Note ID already exists.");
-				// } else {
-				// 	const newNoteId = "ID" + new Date().getTime();
-				// 	const newContent = `---\nnoteId: ${newNoteId}\n---\n${fileContent}`;
-
-				// 	await this.app.vault.modify(activeFile, newContent);
-				// 	new Notice(`Note ID added:  ${newNoteId}`);
-				// }
-
-				// 		const activeFile = this.app.workspace.getActiveFile();
-				// 		if (activeFile) {
-				// 			const vaultName = this.app.vault.getName();
-				// 			const noteName = activeFile.basename;
-				// 			navigator.clipboard.writeText(`${vaultName}:${noteName}`);
-				// 			new Notice(`Vault: ${vaultName}, Note: ${noteName}`);
-				// 		} else {
-				// 			new Notice("No active file found.");
-				// 		}
+					await navigator.clipboard.write([clipboardItem]);
+				}
 			} catch (e) {
 				new Notice(`Error reading or modifying file: ${e}`);
 			}

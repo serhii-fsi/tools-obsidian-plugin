@@ -7,5 +7,5 @@ export function genWebLink(
 	anchorText: string
 ) {
 	const completeUrl = genWebUrl(url, vault, query);
-	return `<a href="${completeUrl}">🗈 ${vault}: ${anchorText}</a>`;
+	return `<a href="${completeUrl}" target="obsidian_web_url_target">${anchorText}</a>`;
 }
