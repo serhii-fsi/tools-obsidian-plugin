@@ -1,13 +1,13 @@
-import { Editor, MarkdownView, Menu, Notice } from "obsidian";
+import { Editor, MarkdownView, Menu, Notice, TFile } from "obsidian";
 import ToolsPlugin from "./main";
 import { NoteProperties } from "./NoteProperties";
+import { generateUID } from "./utils/generateUID";
+import { NoteId } from "./NoteId";
 
 enum ShareType {
 	LINK,
 	URL,
 }
-
-const NOTE_ID_NAME = "noteid";
 
 export class ShareNote {
 	private plugin: ToolsPlugin;
@@ -62,22 +62,13 @@ export class ShareNote {
 
 		if (activeFile) {
 			try {
-				const noteProps = new NoteProperties(this.plugin, activeFile);
-				let noteId = noteProps.readProp(NOTE_ID_NAME);
-
-				if (typeof noteId !== "string") {
-					noteId = this.genUID();
-					const res = await noteProps.addProp(NOTE_ID_NAME, noteId);
-					if (!res) {
-						console.error("Failed to add note ID to properties");
-						new Notice("Failed to add note ID to properties");
-						return;
-					}
-				}
+				const noteIdObj = new NoteId(this.plugin, activeFile);
+				const noteId = await noteIdObj.getNoteId();
+				if (!noteId) return;
 
 				navigator.clipboard.writeText(noteId);
 
-				// new Notice("!!!!!!  " + noteProps.readProp("noteId"));
+				//  new Notice("!!!!!!  " + noteProps.readProp("noteId"));
 
 				// const fileContent = await this.app.vault.read(activeFile);
 				// const noteIdRegex = /noteId: ID\d+/;
@@ -99,10 +90,4 @@ export class ShareNote {
 			new Notice("No active file found");
 		}
 	}
-
-	genUID() {
-		return "ID" + new Date().getTime();
-	}
-
-	addUID() {}
 }
