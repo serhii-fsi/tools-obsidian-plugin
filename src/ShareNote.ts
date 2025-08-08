@@ -66,12 +66,18 @@ export class ShareNote {
 
 					await navigator.clipboard.writeText(clipboard);
 				} else if (shareType === ShareType.LINK) {
-					const text = `🗈 ${vaultName}: ${noteName}`;
-					const html = genWebLink(baseUrl, vaultName, noteId, text);
+					const anchorText = `🗈 ${vaultName}: ${noteName}`;
+					const html = genWebLink(
+						baseUrl,
+						vaultName,
+						noteId,
+						anchorText
+					);
+					const text = genWebUrl(baseUrl, vaultName, noteId);
 
 					const clipboardItem = new ClipboardItem({
-						"text/plain": new Blob([text], { type: "text/plain" }),
 						"text/html": new Blob([html], { type: "text/html" }),
+						"text/plain": new Blob([text], { type: "text/plain" }),
 					});
 
 					await navigator.clipboard.write([clipboardItem]);
