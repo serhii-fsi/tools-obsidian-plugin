@@ -1,6 +1,6 @@
 import { Editor, MarkdownView } from "obsidian";
 import ToolsPlugin from "./main";
-import { generateTimestamp } from "./utils/generateTimestamp";
+import { genTimestamp } from "./utils/genTimestamp";
 
 export class Timestamp {
 	private plugin: ToolsPlugin;
@@ -27,7 +27,7 @@ export class Timestamp {
 	}
 
 	insert(editor: Editor, view: MarkdownView) {
-		const timestamp = generateTimestamp();
+		const timestamp = genTimestamp();
 		editor.replaceSelection(timestamp);
 	}
 }

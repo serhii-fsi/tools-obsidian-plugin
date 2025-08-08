@@ -1,7 +1,7 @@
 import { TFile, Notice } from "obsidian";
 import ToolsPlugin from "./main";
 import { NoteProperties } from "./NoteProperties";
-import { generateUID } from "./utils/generateUID";
+import { genUID } from "./utils/genUID";
 
 const NOTE_ID_NAME = "noteid";
 
@@ -22,7 +22,7 @@ export class NoteId {
 
 		// Add
 		if (typeof noteId !== "string") {
-			noteId = generateUID();
+			noteId = genUID();
 			const res = await noteProps.addProp(NOTE_ID_NAME, noteId);
 			if (!res) {
 				console.error("Failed to add note ID to properties");

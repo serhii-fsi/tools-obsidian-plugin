@@ -1,4 +1,4 @@
-export function generateTimestamp() {
+export function genTimestamp() {
 	const now = new Date();
 
 	const day = String(now.getDate()).padStart(2, "0");

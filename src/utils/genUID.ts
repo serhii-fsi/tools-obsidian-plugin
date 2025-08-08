@@ -1,3 +1,3 @@
-export function generateUID() {
+export function genUID() {
 	return "ID" + new Date().getTime();
 }

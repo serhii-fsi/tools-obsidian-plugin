@@ -1,8 +1,10 @@
 import { Editor, MarkdownView, Menu, Notice, TFile } from "obsidian";
 import ToolsPlugin from "./main";
 import { NoteProperties } from "./NoteProperties";
-import { generateUID } from "./utils/generateUID";
+import { genUID } from "./utils/genUID";
 import { NoteId } from "./NoteId";
+import { genWebUrl } from "./utils/genWebUrl";
+import { genWebLink } from "./utils/genWebLink";
 
 enum ShareType {
 	LINK,
@@ -66,7 +68,7 @@ export class ShareNote {
 				const noteId = await noteIdObj.getNoteId();
 				if (!noteId) return;
 
-				navigator.clipboard.writeText(noteId);
+				await navigator.clipboard.writeText(noteId);
 
 				//  new Notice("!!!!!!  " + noteProps.readProp("noteId"));
 
