@@ -40,35 +40,35 @@ export class ShareNote {
 			})
 		);
 
-		// menu.addItem((item) =>
-		// 	item.setTitle("Share URL").onClick(() => {
-		// 		this.share(ShareType.URL);
-
-		// 		const activeFile = this.app.workspace.getActiveFile();
-		// 		if (activeFile) {
-		// 			const vaultName = this.app.vault.getName();
-		// 			const noteName = activeFile.basename;
-		// 			navigator.clipboard.writeText(`${vaultName}:${noteName}`);
-		// 			new Notice(`Vault: ${vaultName}, Note: ${noteName}`);
-		// 		} else {
-		// 			new Notice("No active file found.");
-		// 		}
-		// 	})
-		// );
+		menu.addItem((item) =>
+			item.setTitle("Share URL").onClick(() => {
+				this.share(ShareType.URL);
+			})
+		);
 
 		menu.showAtMouseEvent(evt);
 	}
 
-	async share(type: ShareType) {
+	async share(shareType: ShareType) {
 		const activeFile = this.plugin.app.workspace.getActiveFile();
 
 		if (activeFile) {
 			try {
+				// Get note id
 				const noteIdObj = new NoteId(this.plugin, activeFile);
 				const noteId = await noteIdObj.getNoteId();
 				if (!noteId) return;
 
-				await navigator.clipboard.writeText(noteId);
+				const baseUrl = this.plugin.settings.baseUrlSetting;
+				const vaultName = this.plugin.app.vault.getName();
+				const noteName = activeFile.basename;
+
+				// let clipboard;
+				// if (shareType === ShareType.URL) {
+				// 	clipboard = genWebUrl();
+				// }
+
+				// await navigator.clipboard.writeText(noteId);
 
 				//  new Notice("!!!!!!  " + noteProps.readProp("noteId"));
 
@@ -85,6 +85,16 @@ export class ShareNote {
 				// 	await this.app.vault.modify(activeFile, newContent);
 				// 	new Notice(`Note ID added:  ${newNoteId}`);
 				// }
+
+				// 		const activeFile = this.app.workspace.getActiveFile();
+				// 		if (activeFile) {
+				// 			const vaultName = this.app.vault.getName();
+				// 			const noteName = activeFile.basename;
+				// 			navigator.clipboard.writeText(`${vaultName}:${noteName}`);
+				// 			new Notice(`Vault: ${vaultName}, Note: ${noteName}`);
+				// 		} else {
+				// 			new Notice("No active file found.");
+				// 		}
 			} catch (e) {
 				new Notice(`Error reading or modifying file: ${e}`);
 			}

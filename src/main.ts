@@ -4,11 +4,11 @@ import { Timestamp } from "./Timestamp";
 import { ShareNote } from "./ShareNote";
 
 interface ToolsPluginSettings {
-	webUrlSetting: string;
+	baseUrlSetting: string;
 }
 
 const DEFAULT_SETTINGS: ToolsPluginSettings = {
-	webUrlSetting: "",
+	baseUrlSetting: "",
 };
 
 export default class ToolsPlugin extends Plugin {

@@ -15,16 +15,16 @@ export class ToolsPluginSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Web URL")
+			.setName("Base URL")
 			.setDesc(
 				"URL of the page that redirects to the Obsidian standalone app"
 			)
 			.addText((text) =>
 				text
 					.setPlaceholder("https://domain.com/path/")
-					.setValue(this.plugin.settings.webUrlSetting)
+					.setValue(this.plugin.settings.baseUrlSetting)
 					.onChange(async (value) => {
-						this.plugin.settings.webUrlSetting = value;
+						this.plugin.settings.baseUrlSetting = value;
 						await this.plugin.saveSettings();
 					})
 			);
