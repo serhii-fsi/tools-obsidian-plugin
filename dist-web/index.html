@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian URL Handler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .obsidian-url {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .big-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .big-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .big-button:active {
+            transform: translateY(0);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Open Obsidian Note</h1>
+        <div id="obsidianUrl" class="obsidian-url"></div>
+        <a id="openBtn" class="big-button" href="#" target="_blank">Open Obsidian Note</a>
+    </div>
+    <script>
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const vault = urlParams.get('vault');
+            const query = urlParams.get('query');
+            return { vault, query };
+        }
+
+        function generateObsidianUrl(vault, query) {
+            const encodedVault = encodeURIComponent(vault);
+            const encodedQuery = encodeURIComponent(query);
+            return `obsidian://search?vault=${encodedVault}&query=${encodedQuery}`;
+        }
+
+        function updateUI(obsidianUrl) {
+            document.getElementById('obsidianUrl').textContent = obsidianUrl;
+            document.getElementById('openBtn').href = obsidianUrl;
+        }
+
+        function initialize() {
+            const { vault, query } = getUrlParams();
+            if (vault && query) {
+                const obsidianUrl = generateObsidianUrl(vault, query);
+                updateUI(obsidianUrl);
+            } else {
+                document.getElementById('obsidianUrl').textContent = "Missing vault or query parameters.";
+                document.getElementById('openBtn').style.display = "none";
+            }
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>
